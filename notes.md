@@ -121,9 +121,15 @@ Uncle Bob's 3 Laws of TDD: From the book "Clean Code: A Handbook of Agile Softwa
 
 - "You may not write more production code than is sufficient to pass the currently failing unit test." This keeps you from writing production code without any unit test to verify it. 
 
-### [Example TDD session: The FizzBuzz Kata]()
+### [Example TDD session: The FizzBuzz Kata](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/example-tdd-session-the-fizzbuzz-kata)
 
+For this example, we will be using the FizzBuzz code Kata.
 
+- The name **Kata** comes from *Martial Arts* and means training exercises.
+
+- **Code Kata:** Training exercises for programmers.
+
+- Work and notes can be found in `Exercise_Files/code_samples/fizzbuzz_kata/FizzBuzzTest.py`
 
 ## Setting Up a Development Environment
 
