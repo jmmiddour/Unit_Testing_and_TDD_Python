@@ -133,17 +133,95 @@ For this example, we will be using the FizzBuzz code Kata.
 
 ## Setting Up a Development Environment
 
-### [Python virtual environments]()
+### [Python virtual environments](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/python-virtual-environments)
 
+What are Python Virtual Environments?
 
+- By default, all python packages are installed to a single directory on the system. This can pose a problem if you are working on multiple project that have different versions of the same dependencies. You can not have both versions installed in an environment at the same time.
 
-### [Set up pytest in PyCharm]()
+- Virtual environments solve this by creating isolated python environments that can be customized per project.
 
+- Virtual environments are directories containing links to the system's python install and providing the sub-directories for installing additional python packages in that particular virtual environment.
 
+- The PATH environment variable is updated to point to the virtual environment when that virtual environment is activated.
 
-### [Set up pytest in Eclipse PyDev]()
+Setting up a Python Virtual Environment in Python 2.7
 
+- Install the `virtualenv` utility via `pip install virtualenv`
 
+- Create a new virtual environment with the command `virtualenv <name of virtualenv>`
+
+- Activate your virtual environment by sourcing the activate script in the virtual environment's bin directory `source ./<name of virtualenv>/bin/activate` (on my machine it is `source <name of virtualenv>/Script/activate`)
+
+- Deactivate your virtual environment with the `deactivate` command
+
+- Delete your virtual environment by deleting its directory
+
+Setting up a Python Virtual Environment in Python 3
+
+- Python 3 comes with a virtual environment module built-in called `venv`
+
+- Virtualenv can also be used with Python 3 but venv is what's recommended by the Python community as it is built-in to python 3, creates smaller virtual environments and is extendable to include additional plug-ins.
+
+- The only difference with creating, activating, deactivating, or deleting virtual environments with `venv` vs `virtualenv` is the creation command.
+
+- To create a virtual environment with `venv` you run the command `python3 -m venv <virtual env name>`
+
+- All other command are the same as with the `virtualenv`
+
+Setting up a Python Virtual Environment in Windows
+
+- Use a bash shell in Windows and from that shell use the above instructions
+
+- Follow the instructions on the [python.org](https://docs.python.org/3/tutorial/venv.html) website for running virtual environments directly from Windows normal command line window.
+
+### [Set up pytest in PyCharm](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/set-up-pytest-in-pycharm)
+
+If you created your virtual environment in a BASH terminal: 
+
+- Open PyCharm and click on "Create New Project"
+
+- Make sure on the left panel that "Pure Python" is selected
+
+- For "Location" this will be the location on your local machine where your project will live, and the last directory will be your root directory for the project.
+
+- For the "Interpreter" click the dropdown and look for the virtual environment that your created earlier, then click the dots on the right, "Add Local", locate the directory for the virtual environment, locate the "Scripts" directory within it, then click on the `python.exe` file.
+
+If you already have the project open and created the virtual environment in the project directory:
+
+- You can activate your virtual environment in your terminal
+
+- Click on the bottom right where it says "Python 3.8" to configure your interpreter.
+
+  - Click on "Add Interpreter"
+
+  - Make sure that "Virtual Environment" is selected on the right panel
+  
+  - Click on "Existing Environment"
+  
+  - Click the `...` to the left of the path for the "Interpreter"
+  
+  - Find your virtual environment directory, then the "Scripts" directory within that directory
+  
+  - Click on `python.exe` and click okay
+  
+- Set up Configuration:
+
+  - Click on the dropdown at the top to edit/add configuration
+  
+  - Add a new configuration using the `+` and select the `pytest` under the `python test` section
+  
+  - Under "Target" - "Script path" - add the path to the .py file you want to run the test on.
+  
+  - Select your "Interpreter" and click okay.
+  
+- Now you can just click on the "play" button and your test will automatically run.
+
+Code and more notes can be found in `Exercise_Files/code_samples/pytest_test.py`
+
+### [Set up pytest in Eclipse PyDev](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/set-up-pytest-in-eclipse-pydev)
+
+No need to use this application at the moment, so no notes on this one but did watch the video.
 
 ## Pytest Overview
 
