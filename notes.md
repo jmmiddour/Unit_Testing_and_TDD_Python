@@ -65,9 +65,61 @@ Unit Testing Specifics:
     ```
 
 
-### [What is test-driven development?](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/what-is-test-driven-development-tdd)
+### [What is test-driven development (TDD)?](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/what-is-test-driven-development-tdd)
 
+- A process for writing code where the developer takes personal responsibility for the quality of their code.
 
+- Unit tests are written *before* the production code.
+
+- Don't write all the tests or production code at once.
+
+    - You write one unit test for one test case, then you write the production code to make it pass the test.
+    
+- The tests and production code are both written together in small bits of functionality.
+
+- This short cycle of writing the unit test and then writing the production code to make it pass, provides immediate feedback on the code. This feedback is one of the essential features of TDD.
+
+What are some benefits of using TDD?
+
+- Gives you the confidence to make changes in the code because you have to test before you begin and that verifies the code is working and will tell you if any of your changes have broken anything.
+
+- Gives you immediate feedback.
+
+- The test documents what the production code is supposed to do.
+
+- A new developer looking at the code can use the unit test a source of documentation for understanding what the production code is doing.
+
+- Writing the unit test first helps to drive good object-oriented design. As making individual classes and functions testable in isolation, drives the developer to break the dependencies and add interfaces rather than linking concrete implementations together directly. 
+
+TDD Beginnings:
+
+- TDD was created by Kent Beck in the mid 1990's as part of his work for the Chrysler Corporation where he also created the Extreme Programming software development process. 
+
+- He wrote the first TDD unit testing frameworks in `Smalltalk` called `SUnit`.
+
+- Then he collaborated with Erich Gamma to implement the first Java unit testing framework `JUnit`.
+
+- `JUnit` has been the basis for many other xUnit testing frameworks written for other languages.
+
+TDD Workflow phases: Red, Green, Refactor:
+
+- **Red:** Write a failing unit test for the next bit of functionality that you want to implement in the production code.
+
+- **Green:** Write just enough production code to make the failing test from the *Red* phase pass.
+
+- **Refactor:** Clean up the unit test, and the production code to remove any duplication and make sure the code follows your team standards and best practices.
+
+- Then you repeat the process above until the feature is complete.
+
+Uncle Bob's 3 Laws of TDD: From the book "Clean Code: A Handbook of Agile Software Development"
+
+- These laws ensure that you are following the TDD process.
+
+- "You may not write any production code until you have written a failing unit test." This follows along with writing the unit test first. Seeing your new unit test fail, before writing the production code is a sign that the unit test has been implemented properly.
+
+- "You may not write more of a unit test than is sufficient to fail, and not compiling is failing." This forces you to only write enough of a test for the next test case, and the next test case should always be the simplest test case.
+
+- "You may not write more production code than is sufficient to pass the currently failing unit test." This keeps you from writing production code without any unit test to verify it. 
 
 ### [Example TDD session: The FizzBuzz Kata]()
 
