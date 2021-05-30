@@ -221,34 +221,297 @@ Code and more notes can be found in `Exercise_Files/code_samples/pytest_test.py`
 
 ### [Set up pytest in Eclipse PyDev](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/set-up-pytest-in-eclipse-pydev)
 
-No need to use this application at the moment, so no notes on this one but did watch the video.
+No need to use this application at the moment, so no notes on this one but did watch the video. 
 
 ## Pytest Overview
 
-### [Overview of pytest]()
+### [Overview of pytest](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/overview-of-pytest)
 
+What is PyTest?
 
+- A python unit testing framework
 
-### [Test discovery]()
+- It provides the ability to create Tests, Test Modules, and Test Fixtures
 
+- Uses the built-in Python assert statement which makes it much easier to use than another testing frameworks
 
+- It has command line parameters to help filter which tests are executed and in what order
 
-### [An xunit-style setup and teardown]()
+Creating a Test:
 
+```
+# Create a file named "test_some_function.py"
+def test_some_function():
+    assert 1 == 1
+```
 
+- Tests are python functions with `test_` at the beginning of the function name
 
-### [Test fixtures]()
+- The tests then test production code by doing a verification of values using the standard python assert statement
 
+- Similar tests can be grouped together by including them in the same module or class
 
+- Can also run it from the command line with `pytest -v` the `-v` just means verbose and do not need it but shows more information about the test when using it. This can be run from the root directory as long as the test file is named properly, the pytest command will find it, even if you are not in that current directory.
 
-### [Assert statements and exceptions]()
+  - Can also add `-s` which will allow you to see print statements in the console when the test gets ran.
 
+### [Test discovery](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/test-discovery)
 
+- Pytest will automatically discover tests when you execute based on a standard naming convention
 
-### [Command line arguments: pytest]()
+- Test functions should start with `test_`
 
+- Classes with tests in them should start with `Test` at the beginning of the class name and not have an `__init__` method
 
+- The file names of test modules should start or end with `test` (i.e. `test_example.py` or `example_test.py`)
 
+### [An xunit-style setup and teardown](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/an-xunit-style-setup-and-teardown)
+
+`XUnit` style setup/teardown functions will execute code before and after:
+
+- Test Modules
+
+  - `def setup_module():`
+  
+  - `def teardown_module():`
+
+- Test Functions
+
+  - `def setup_function():`
+  
+  - `def teardown_function():`
+
+- Test Classes
+
+  - `def setup_class():`
+  
+  - `def teardown_class():`
+
+- Test Methods in Test Classes
+
+  - `def setup_method():`
+  
+  - `def teardown_method():`
+  
+Using these setup and teardown functions can help reduce code duplication by letting you specify the set up and tear down code once at each of the different levels as necessary, rather than repeating the code in each individual unit test. 
+
+- See `Exercise_Files/code_samples/test_file.py` for code examples and more notes from line 1 - line 253
+
+### [Test fixtures](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/test-fixtures)
+
+- Test Fixtures allow for the re-use of setup and teardown code across tests by specifying functions that should be ran before the unit test runs.
+
+- You specify that a function is a Test Fixture by adding a decorator `@pytest.fixture()` directly before the function.
+
+- Individual unit test can specify which fixtures they want executed by passing the name of that fixture in as its argument.
+
+  - Example:
+  
+    ```
+    @pytest.fixture()
+    def math():
+      return Math()
+    
+    def test_add(math):
+      assert math.add(1, 1) == 2
+    ```
+    
+- You can also set the `autouse` parameter to `True` to automatically execute a fixture before each test.
+
+- See coding examples and comments in the `Exercise_Files/code_samples/test_file.py` from line 254 - line 438
+
+Test Fixture Teardown:
+
+- Often there is also a teardown function that needs to be done after all test have been completed.
+
+- Each test fixture can specify their own optional teardown code which is called after a fixture goes out of scope.
+
+- There are 2 methods for specifying a teardown code. 
+  
+  - The "yield" keyword:
+  
+    - When the "yeild" keyword is used, the code after the yield is executed after the fixture goes out of scope.
+  
+    - The "yield" keyword is a replacement for the return keyword so any return values are also specified in the yield statement.
+  
+    - Example:
+  
+      ```
+      @pytest.fixture()
+      def setup():
+          print('Setup!')
+          yeild
+          print('Teardown!')
+      ```
+    
+  - The request-context object's "addfinalizer" method:
+
+    - This method is a little more complicated but a little more capable than the yield statement.
+  
+    - With the `addfinalizer` method, one or more finalizer functions are added via the request-context's `addfinalizer` method.
+  
+    - This method allows for multiple finalization functions, whereas the yield method does not.
+  
+    - Example:
+  
+      ```
+      @pytest.fixture()
+      def setup(request):
+          print('Setup!')
+          def teardown:
+              print('Teardown!')
+          request.addfinalizer(teardown)
+      ```
+      
+- More code examples and comments in the `Exercise_Files/code_samples/test_file.py` file from line 439 - line 511
+
+Test Fixture Scopes:
+
+- Test fixtures can have the following 4 different scopes which specify how often the fixture will be called:
+
+  1. Function - (Default) Run the fixture once for each test defined in the module (file).
+  
+  2. Class - Run the fixture once for each class of tests.
+  
+  3. Module - Run once when the module (file) goes in scope. (when the file is called)
+  
+  4. Session - The fixture is run once when pytest starts
+  
+- See examples in `Exercise_Files/code_samples/test_file.py` line 512 - line 592 and `Exercise_Files/code_samples/test_file2.py` line 1 - line 79
+
+Test Fixture Return Objects and Params
+
+- Test fixtures can optionally return data which can be used in the test.
+
+- The optional "params" array argument in the fixture decorator can be used to specify the data returned to the test.
+
+- When the "params" argument is specified then the test will be called one time with each value specified.
+
+- Example:
+
+  ```
+  @pytest.fixture(params=[1, 2])
+  def setup_data(request):
+      return request.param
+  
+  def test1(setup_data):
+      print(setup_data)
+  ```
+  
+- See more code examples in `Exercise_Files/code_samples/test_file.py` line 593 - line 641
+
+### [Assert statements and exceptions](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/assert-statements-and-exceptions)
+
+Using the `assert` Statement:
+
+- Pytest allows the use of the built-in python assert statement for performing verifications in a unit test.
+
+- The normal comparison operators, such as `<`, `>`, `<=`, `>=`, `==`, and `!=` can be used on all python data types.
+
+- Pytest expands on the message returned from the assert failures to provide more context in the test results.
+
+- Example:
+
+  ```
+  def test_int():  # Test for integer data type
+      assert 1 == 1
+  
+  def test_str():  # Test for string data type
+      assert 'str' == 'str'
+  
+  def test_float():  # Test for float data type
+      assert 1.0 == 1.0
+  
+  def test_array():  # Test for array/list format
+      assert [1, 2, 3] == [1, 2, 3]
+  
+  def test_dict():  # Test for dictionary format
+      assert {'1': 1} == {'1': 1}
+  ```
+  
+Comparing Floating Point Values
+
+- Validating floating point values can sometimes be difficult as internally the value is stored as series of binary fractions (i.e. 1/3 is internally 0.333...)
+
+- Because of this some floating point comparisons that would be expected to pass, will fail.
+
+  - Example of a failing test:
+  
+    ```
+    def test_bad_float_comp():
+        assert (0.1 + 0.2) == 0.3
+    ```
+
+- The pytest "approx" function can be used to verify that two floating point values are "approximately" equivalent to each other with a default tolerance of `1e-6`
+
+  - Example of how to write the above failing test to pass:
+  
+    ```
+    def test_good_float_comp():
+        val = 0.1 + 0.2
+        assert val == approx(0.3)
+    ```
+    
+Verifying Exceptions:
+
+- In some test cases we want to verify that a function throws an exception under certain conditions. 
+
+- Pytest provides the "raises" helper to perform this verification using the "with" keyword.
+
+- When the "raises" helper is used, the unit test will fail if the specified exception is not thrown in the code block after the "raises" line. 
+
+  - Example:
+  
+    ```
+    def test_exception():
+        with raises(ValueError):
+            raise ValueError
+    ```
+    
+- See code example and more notes in `Exercise_Files/code_samples/test_file1.py` line 1 - line 105
+
+### [Command line arguments: pytest](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/command-line-arguments-pytest)
+
+Specifying What Tests Should Run:
+
+- By default, Pytest will automatically discover and run all tests in all properly named modules (files) from the current working directory and sub-directories.
+
+- There are several command line arguments for controlling which discovered tests actually are executed.
+
+  - moduleName - Simply specify the module name to run only the tests in that module (file).
+  
+  - DirectoryName/ - Runs any tests found in the specified directory.
+  
+  - `-k` expression - Matches tests found that match the evaluate expression in the string. The string values can include module, class, and function names (i.e. "TestClass and TestFunction").
+  
+  - `-m` expression - Matches tests found that have a "pytest mark" decorator that matches the specified expression.
+  
+Additional Useful Command Line Arguments:
+
+- `-v` Report in verbose mode
+
+- `-q` Run in quiet mode (Can be helpful when running hundreds or thousands of tests at once).
+
+- `-s` Don't capture the console output (shows print statements on the console).
+
+- `--ignore` Ignore the specified path when discovering tests.
+
+- `--maxfail` Stop after the specified number of failures.
+
+- Some Examples:
+
+  - `pytest -v -s` will run all tests discovered in the current working directory and any sub-directories.
+  
+  - `pytest -v -s <file name in cwd>` will only run the tests in that file within the current working directory.
+  
+  - `pytest -v -s <sub-directory name>/` will only run the tests that are in the files in that directory.
+  
+  - `pytest -v -s -k "<test name>"` will only run the test specified in the string.
+  
+  - `pytest -v -s -k "<test name> or <test name>"` will run both of the test specified with the `or` separator.
+  
+  - `pytest -v -s -m "<name of mark test> or <name of mark test>"` will run only the test with the `mark` decorator and those test names (example: `@pytest.mark.<test name>`)
+  
 ## The Supermarket Checkout Kata
 
 ### [Supermarket Checkout Kata overview]()
