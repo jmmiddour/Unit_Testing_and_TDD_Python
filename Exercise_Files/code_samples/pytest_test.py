@@ -6,9 +6,9 @@
 #     assert False
 
 
-def test_assert_true():
-    """
-    GREEN Stage: Hard code a passing test
-    :return: Pass
-    """
-    assert True
+# def test_assert_true():
+#     """
+#     GREEN Stage: Hard code a passing test
+#     :return: Pass
+#     """
+#     assert True
