@@ -514,29 +514,315 @@ Additional Useful Command Line Arguments:
   
 ## The Supermarket Checkout Kata
 
-### [Supermarket Checkout Kata overview]()
+### [Supermarket Checkout Kata overview](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/supermarket-checkout-kata-overview)
 
+Overview of the Test Cases needing to implement:
 
+- Can create an instance of the Checkout class
 
-### [Setup and first test case]()
+- Can add an item price
 
+- Can add an item
 
+- Can calculate the current total
 
-### [Add items, add item prices, and calculate current total]()
+- Can add multiple items and get correct total
 
+- Can add discount rules
 
+- Can apply discount rules to the total
 
-### [Add multiple items and calculate total]()
+- Exception is thrown for item added without a price
 
+### [Setup and first test case](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/setup-and-first-test-case)
 
+Created `TestCheckout.py` and `Checkout.py` and implemented the first test case of "Can create an instance of the Checkout class"
 
-### [Add and apply discounts]()
+In the `TestCheckout.py`:
 
+```
+from Checkout import Checkout
 
+def test_CanInstantiateCheckout():
+    co = Checkout()
+```
 
-### [Throw exception when adding an item with no price]()
+In the `Checkout.py`:
 
+```
+class Checkout:
+    pass
+```
 
+### [Add items, add item prices, and calculate current total](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/add-items-add-items-prices-and-calculate-current-total)
+
+Can add an item price:
+
+```
+# In the TestCheckout.py file
+def test_CanAddItemPrice():
+    co = Checkout()
+    co.addItemPrice('a', 1)
+    
+# In the Checkout.py file under the `class Checkout`
+def addItemPrice(self, item, price):
+    pass
+```
+
+- Refactor phase: Removed the `test_CanInstantiateCheckout`, it is no longer needed.
+
+Can add an item:
+
+```
+# In the TestCheckout.py file
+def test_CanAddItem():
+    co = Checkout()
+    co.addItem('a')
+
+# In the Checkout.py file under the `class Checkout`
+def addItem(self, item):
+    pass
+```
+
+- Refactor phase: Create a Test Fixture because we are repeating the instantiation of `Checkout()` in all tests.
+
+  ```
+  @pytest.fixture()
+  def checkout():
+      checkout = Checkout()
+      return checkout
+  
+  # Change the test already added to use this fixture
+  def test_CanAddItemPrice(checkout):
+      checkout.addItemPrice('a', 1)
+  
+  def test_CanAddItem(checkout):
+      checkout.addItem('a')
+  ```
+
+Can calculate the current total:
+
+```
+# In the TestCheckout.py file
+def test_CanCalculateTotal(checkout):
+    checkout.addItemPrice('a', 1)
+    checkout.addItem("a")
+    assert checkout.calculateTotal() == 1
+
+# In the Checkout.py file under the `class Checkout`
+def calculateTotal(self):
+    return 1
+```
+
+- Refactor phrase: Remove the `test_CanAddItemPrice` and `test_CanAddItem` as they are no longer needed because they are both being done in the `test_CanCalculateTotal`
+
+### [Add multiple items and calculate total](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/add-multiple-items-and-calculate-total)
+
+In the `TestCheckout.py`:
+
+```
+def test_GetCorrectTotalWithMultipleItems(checkout):
+    checkout.addItem("a", 1)
+    checkout.addItem("b", 2)
+    checkout.addItem("a")
+    checkout.addItem("b")
+    assert checkout.calculateTotal() == 3
+```
+
+In the `Checkout.py` under the `Checkout` class:
+
+```
+def __init__(self):
+    # Create a dictionary to hold the item (key), price (value)
+    self.prices = {}
+    # Instantiate the total cost at 0
+    self.total = 0
+    
+def addItemPrice(self, item, price):
+    # add the item and price to the prices dictionary
+    self.prices[item] = price
+    
+def addItem(self, item):
+    self.total += self.prices[item]
+    
+def calculateTotal(self):
+    return self.total
+```
+
+### [Add and apply discounts](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/add-and-apply-discounts)
+
+Can add discount rules:
+
+- In the `TestCheckout.py`:
+
+  ```
+  def test_canAddDiscountRule(checkout):
+      checkout.addDiscount("a", 3, 2)
+  ```
+
+- In the `Checkout.py` under the `Checkout` class:
+
+  ```
+  def addDiscount(self, item, nbrOfItems, price):
+      pass
+  ```
+
+- Refactor phase: The `addItemPrice` is repeated in multiple test, going to add this for both items a and b to the Test Fixture and remove them from the test they are in.
+
+Can apply discount rules to the total:
+
+- In the `TestCheckout.py`:
+
+  ```
+  def test_canApplyDiscountRule(checkout):
+    checkout.addDiscount("a", 3, 2)
+    checkout.addItem("a")
+    checkout.addItem("a")
+    checkout.addItem("a")
+    assert checkout.calculateTotal() == 2
+  ```
+
+- In the `Checkout.py` under the `Checkout` class:
+
+  ```
+  class Discount:
+      def __init__(self, nbrItems, price):
+          self.nbrItems = nbrItems
+          self.price = price
+
+  def __init__(self):
+      self.prices = {}
+      self.discounts = {}
+      self.items = {}
+
+  def addDiscount(self, item, nbrOfItems, price):
+      discount = self.Discount(nbrOfItems, price)
+      self.discounts[item] = discount
+  
+  def addItem(self, item):
+      if item in self.items:
+          self.items[item] += 1
+      else:
+          self.items[item] = 1
+  
+  def calculateTotal(self):
+      total = 0
+  
+      for item, cnt in self.items.items():
+          if item in self.discounts:
+              discount = self.discounts[item]
+  
+              if cnt >= discount.nbrItems:
+                  nbrOfDiscounts = cnt/discount.nbrItems
+                  total += nbrOfDiscounts * discount.price
+                  remaining = cnt % discount.nbrItems
+                  total += remaining * self.prices[item]
+  
+              else:
+                  total += self.prices[item] * cnt
+  
+          else:
+              total += self.calculateItemTotal(item, cnt)
+  
+      return total
+  ```
+
+- Refactor phase: 
+
+  - The `addItemPrice` is repeated in multiple test, going to add this for both items a and b to the Test Fixture and remove them from the test they are in.
+  
+  - Create two new methods within the `Checkout` class to calculate the item total and the item discount total and this will also remove some code from the `calculateTotal` method:
+  
+    ```
+    def calculate_item_total(self, item, cnt):
+        """
+        Class method to calculate the total after discounts
+        :param item: str: single item from available items
+        :param cnt: int: number of the given item
+        :return: The total cost for the given item after discounts
+        """
+        total = 0
+
+        # If given item has a discount available...
+        if item in self.discounts:
+            # Instantiate discounted price
+            discount = self.discounts[item]
+
+            # If the given count is >= the number of items need for the discount
+            if cnt >= discount.num_items:
+                # Total will be calculated based on discounted price
+                total += self.calculate_item_discounted_total(item, cnt, discount)
+
+            else:  # Otherwise...
+                # Total will be calculated based on regular price
+                total += self.prices[item] * cnt
+
+        else:  # If item not in the discounts...
+            # Total will be calculated based on regular price
+            total += self.prices[item] * cnt
+
+        return total
+    
+    def calculate_item_discounted_total(self, item, cnt, discount):
+        """
+        Class method to calculate the total of an item based on the
+            discounted price and the number of that item
+        :param item: str: single item from available items
+        :param cnt: int: number of the given item
+        :param discount: float: the discounted price of given item
+        :return: float: the total after discount is applied
+        """
+        total = 0
+        # How many of the item will get the discount price?
+        num_of_discounts = cnt / discount.num_items
+        # Total of discounted items
+        total += num_of_discounts * discount.price
+        # Total of remaining items that do not get the discount price
+        remaining = cnt % discount.nbrItems
+        # Complete total for the item given
+        total += remaining * self.prices[item]
+        return total
+    ```
+
+- **TIP:** If you need to skip a test while making changes to ensure that no other test fail while making the changes (i.e. when you need to do a lot of refactoring to existing code to make current test pass) you can use a mark decorator: `@pytesst.mark.skip`
+
+- All code changes and additional comments are in the `Exercise_Files/code_samples/checkout_kata/Checkout.py` and `Exercise_Files/code_samples/checkout_kata/TestCheckout.py` files.
+
+### [Throw exception when adding an item with no price](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/throw-exception-when-adding-an-item-with-no-price)
+
+In the `TestCheckout.py`:
+
+```
+def test_exception_bad_item(checkout):
+    """
+    Test function to check the exception is being raised for a bad item
+    :param checkout: Test Fixture
+    :return: bool: Pass or Fail
+    """
+    with pytest.raises(Exception):
+        checkout.add_item("c")
+```
+
+In the `Checkout.py` under the `Checkout` class, change `add_item` method:
+
+```
+def add_item(self, item):
+    """
+    Class method to add item count to the items dictionary
+    :param item: str: single item from available items
+    :return: add 1 to the count for the item to the items dictionary
+    """
+    # If the item is not a valid item...
+    if item not in self.prices:
+        # Raise an exception
+        raise Exception("Bad Item")
+
+    if item in self.items:      # If already in items...
+        self.items[item] += 1   # Increment count by 1
+
+    else:                       # Otherwise...
+        self.items[item] = 1    # Add item as key with value of 1
+```
 
 ## Test Doubles
 
