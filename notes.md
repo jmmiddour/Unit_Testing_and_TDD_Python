@@ -1138,9 +1138,59 @@ Can call `read_from_file`:
 
 ## Test-Driven Development Best Practices
 
-### [TDD best practices]()
+### [TDD best practices](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/tdd-best-practices)
 
+Always Do the Next Simplest Test Case:
 
+- This allows you to gradually increase the complexity of your code, refactoring as you go. This helps to keep your code clean and understandable.
+
+- If you jump into the complex test cases too quickly, you will find yourself stuck writing a lot of functionality all at once. This breaks the short feedback cycle that we look for with TDD.
+
+- Beyond just slowing you down, this can also lead to bad design decisions. You could miss some simple implements that come from the incremental approach.
+
+Use Descriptive Test Names:
+
+- Code is read 1000 times more than it's witten. Make it clear and readable!
+
+- Unit tests are the best documentation for how your code works for developers that come after you. Make them easy to understand because if the developers can not understand what the tests are doing, the documentation part is lost.
+
+- Test suites should name the class or function under test, and the test names should describe the functionality being tested.
+
+Keep Test Fast:
+
+- One of the biggest benefits of TDD is the fast feedback on how your changes have affected things. 
+
+- This goes away if your unit tests take more than a few seconds to build and run.
+
+- To help your test stay fast, try to:
+
+  - Keep console output to a minimum. This slows things down and can clutter up the testing framework output.
+
+  - Mock out any slow collaborators with test doubles that are faster.
+  
+Use Code Coverage Analysis Tools:
+
+- Once you have implemented all your test cases, go back and run your unit test through a code coverage tool.
+
+- It can be surprising some code you will miss. This can help you identify any test cases that you may have missed.
+
+- You should have a goal of 100% code coverage in functions with real logic in them (i.e. not simple getters/setters).
+
+Run your Tests Multiple Times and in Random Order:
+
+- Running your tests many times will help ensure that you don't have any flaky tests that fail intermittently.
+
+- Running your tests in random order ensures that your tests don't have any dependencies between each other.
+
+- Use the `python-random-order` plugin to randomize the order that the tests are executed, and the `pytest-repeat` plugin to repeat one or more tests a specific number of times.
+
+Use a Static Code Analysis Tool:
+
+- Pylint is an excellent open source static code analysis tool that will find errors in your code that you may have missed in your testing.
+
+- Pylint can verify your python code meets your team's coding standard (or the PEP8 standard by default).
+
+- Pylint can also detect duplicate code and can generate UML diagrams from its analysis of the code.
 
 ## Conclusion
 
