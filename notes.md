@@ -1194,6 +1194,20 @@ Use a Static Code Analysis Tool:
 
 ## Conclusion
 
-### [Summary]()
+### [Summary](https://www.linkedin.com/learning/unit-testing-and-test-driven-development-in-python/summary)
 
+Additional Reading on TDD:
 
+- Kent Beck - Test Driven Development: By Example (ISBN 978-0321146533)
+
+- Robert Martin - Clean Code: A Handbook of Agile Software Craftsmanship (ISBN 978-0132350884)
+
+- Michael Feathers - Working Effectively with Legacy Code (ISBN 978-0131177055)
+
+What to Do Next?
+
+- Continue to practice writing code with TDD in both work and with additional code Kata.
+
+- Read the books listed and work through their examples.
+
+- Watch Robert Martin's "[Clean Code](https://cleancoders.com)" video series which is an excellent resource for how to write code in general.
